@@ -71,8 +71,9 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
                 Text(text)
                     .lineLimit(1)
                     .takeSize($size)
-            }else {
-                HStack(spacing: 0) {
+            } else {
+                
+                FlowLayout(alignment: .init(horizontal: .center, vertical: .top), spacingX: 1, spacingY: 1) {
                     ForEach(Array(elements.enumerated()), id: \.offset) { index, element in
                         let data = ATElementData(element: element,
                                                  type: self.type,
@@ -87,7 +88,24 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
                         }
                     }
                 }
-                .fixedSize(horizontal: true, vertical: false)
+                
+                
+//                HStack(spacing: 0) {
+//                    ForEach(Array(elements.enumerated()), id: \.offset) { index, element in
+//                        let data = ATElementData(element: element,
+//                                                 type: self.type,
+//                                                 index: index,
+//                                                 count: elements.count,
+//                                                 value: value,
+//                                                 size: size)
+//                        if toggle {
+//                            Text(element).modifier(E(data, userInfo))
+//                        }else {
+//                            Text(element).modifier(E(data, userInfo))
+//                        }
+//                    }
+//                }
+//                .fixedSize(horizontal: true, vertical: false)
             }
         }
         .onChange(of: text) { _ in
