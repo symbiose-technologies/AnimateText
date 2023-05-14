@@ -52,6 +52,8 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
     /// The size of the Text view.
     @State private var size: CGSize = .zero
     
+    let flowLayoutAlignment: Alignment
+    
     /// initialize `AnimateText`
     ///
     /// - Parameters:
@@ -59,10 +61,14 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
     ///   - type: The type used to split text. `ATUnitType`
     ///   - userInfo: Custom user info for the effect.
     ///
-    public init(_ text: Binding<String>, type: ATUnitType = .letters, userInfo: Any? = nil) {
+    public init(_ text: Binding<String>,
+                type: ATUnitType = .letters,
+                userInfo: Any? = nil,
+                hAlignment: HorizontalAlignment = .center ) {
         _text = text
         self.type = type
         self.userInfo = userInfo
+        self.flowLayoutAlignment = .init(horizontal: hAlignment, vertical: .top)
     }
     
     public var body: some View {
@@ -73,7 +79,7 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
                     .takeSize($size)
             } else {
                 
-                FlowLayout(alignment: .init(horizontal: .center, vertical: .top), spacingX: 1, spacingY: 1) {
+                FlowLayout(alignment: self.flowLayoutAlignment, spacingX: 0, spacingY: 1) {
                     ForEach(Array(elements.enumerated()), id: \.offset) { index, element in
                         let data = ATElementData(element: element,
                                                  type: self.type,
@@ -88,26 +94,12 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
                         }
                     }
                 }
-                
-                
-//                HStack(spacing: 0) {
-//                    ForEach(Array(elements.enumerated()), id: \.offset) { index, element in
-//                        let data = ATElementData(element: element,
-//                                                 type: self.type,
-//                                                 index: index,
-//                                                 count: elements.count,
-//                                                 value: value,
-//                                                 size: size)
-//                        if toggle {
-//                            Text(element).modifier(E(data, userInfo))
-//                        }else {
-//                            Text(element).modifier(E(data, userInfo))
-//                        }
-//                    }
-//                }
-//                .fixedSize(horizontal: true, vertical: false)
             }
         }
+//        .onChange(of: text) { _ in
+//            animateTextChange()
+//        }
+        
         .onChange(of: text) { _ in
             withAnimation {
                 value = 0
@@ -120,6 +112,7 @@ public struct AnimateText<E: ATTextAnimateEffect>: View {
             }
         }
     }
+    
     
     private func getText(_ text: String) {
         switch type {
