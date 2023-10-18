@@ -42,11 +42,18 @@ public struct AutoAnimateText<E: ATTextAnimateEffect>: View {
 
     
     public var body: some View {
+//        AnimateText<E>(.constant(staticTxt), type: type, userInfo: userInfo, hAlignment: hAlignment)
+//            .opacity(0)
+//            .overlay {
+//                AnimateText<E>($text, type: type, userInfo: userInfo, hAlignment: hAlignment)
+//            }
         AnimateText<E>($text, type: type, userInfo: userInfo, hAlignment: hAlignment)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + animationDelay) {
                     text = staticTxt
                 }
             }
+        
+        
     }
 }
